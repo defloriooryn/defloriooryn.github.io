@@ -44,7 +44,7 @@ taxonomies:
 languages:
   en:
     title: DefNotes
-    subtitle: A simple theme for Hugo
+    subtitle: A simple theme for Hugos
     keywords: ''
     copyright: >-
       <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
