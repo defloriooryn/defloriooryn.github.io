@@ -1,0 +1,69 @@
+baseurl: https://defloriooryn.github.io/master
+title: Nizam Blog
+languageCode: en-us
+theme: PaperMod
+paginate: 10
+params:
+  author: "Deflorio Arya Nizam"
+
+  profileMode:
+        enabled: true
+        title: "Deflorio Arya Nizam" 
+        subtitle: "Cloud Enthusiast & Runner"
+        imageUrl: "https://github.com/defloriooryn/Assets/blob/main/me.jpeg?raw=true" # optional
+        imageTitle: "<title of image as alt>" # optional
+        imageWidth: 200
+        imageHeight: 200
+
+  socialIcons: 
+      - name: "linkedin"
+        url: "https://www.linkedin.com/in/deflorioaryanizam/"
+      - name: "instagram"
+        url: "https://www.instagram.com/deflorioan/"
+
+  dateform: 'Jan 2, 2006'
+  dateformShort: Jan 2cd con
+  dateformNum: '2006-01-02'
+  dateformNumTime: '2006-01-02 15:04'
+  defaultTheme: dark
+  homeSubtitle: A simple and beautiful blog
+  disableReadOtherPosts: false
+  enableSharingButtons: true
+  enableGlobalLanguageMenu: true
+  description: My new homepage or blog
+  keywords: 'homepage, blog'
+  ShowShareButtons: true
+  env: production
+  images:
+    - ''
+
+taxonomies:
+  category: blog
+  tag: tags
+  series: series
+languages:
+  en:
+    title: DefNotes
+    subtitle: A simple theme for Hugo
+    keywords: ''
+    copyright: >-
+      <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+      rel="noopener"></a>
+    readOtherPosts: Read other posts
+    params:
+      logo:
+        logoText: hello friend ngs
+        logoHomeLink: /
+menu:
+  main:
+    - identifier: Posts
+      name: Posts
+      url: /posts
+      weight: 1
+    
+    - identifier: Github
+      name: Github
+      url: https://github.com/defloriooryn
+      weight: 2
+
+---
