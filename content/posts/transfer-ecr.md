@@ -4,6 +4,9 @@ date: 2023-05-12T18:51:08+07:00
 draft: false
 toc: false
 images:
+params:
+  ShowCodeCopyButtons: true
+  author: "Deflorio Arya Nizam"
 ---
 
 ![Logo ECR](https://github.com/defloriooryn/Assets/blob/main/ecr.png?raw=true#center)
@@ -27,13 +30,13 @@ images:
 
 4. Repeat the steps 1-3 for the other account.
 
-Fyi, you can have maximum of two Access & Secret key and you can create Access & Secret Key using AWS CLI use following this command.
+Fyi, You can have maximum of two Access & Secret key and you can create Access & Secret Key using AWS CLI use following this command.
   > aws iam create-access-key
 
 &nbsp;
 
 ### Second | Configure the AWS CLI
-Run the command below, then fill in the Access & Key according to previous step and fill Region and Output contents according to what you need. (- -profile can use any name)
+Run the command below, then fill in the Access & Key according to previous step and fill Region and Output contents according to what you need.(- -profile can use any name)
 > aws configure --profile *source-account*
 
 > aws configure --profile *destination-account*
@@ -51,7 +54,7 @@ Run the command below, then fill in the Access & Key according to previous step 
 &nbsp;
 
 ### Fourth | Tag the container image that you pulled with your destination registry
-Replace the *987654321* with Source Account ID, and *region-code* with the AWS Region that you created your Amazon ECR private repository in.
+Replace the *987654321* with Source Account ID.*region-code* with the AWS Region that you created your Amazon ECR private repository in.
 > docker tag name-of-image:v1.0 ***987654321***.dkr.ecr.***region-code***.amazonaws.com/name-of-image:v1.0
 
 &nbsp;
@@ -66,6 +69,6 @@ Replace the *987654321* with Source Account ID, and *region-code* with the AWS R
 
 &nbsp;
 
-### Additional
+### Additional : 
 
 Just like that for notes today, hopefully I can still exist to update this website

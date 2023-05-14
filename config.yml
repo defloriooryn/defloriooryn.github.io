@@ -3,9 +3,11 @@ title: Nizam Blog
 languageCode: en-us
 theme: PaperMod
 paginate: 10
-params:
-  author: "Deflorio Arya Nizam"
 
+
+params:
+  env: production
+  author: "Deflorio Arya Nizam"
   profileMode:
         enabled: true
         title: "Deflorio Arya Nizam" 
@@ -20,6 +22,8 @@ params:
         url: "https://www.linkedin.com/in/deflorioaryanizam/"
       - name: "instagram"
         url: "https://www.instagram.com/deflorioan/"
+      - name: "github"
+        url: "https://github.com/defloriooryn/"
 
   dateform: 'Jan 2, 2006'
   dateformShort: Jan 2cd con
@@ -33,7 +37,7 @@ params:
   description: My new homepage or blog
   keywords: 'homepage, blog'
   ShowShareButtons: true
-  env: production
+  ShareButtons: ["linkedin", "whatsapp", "telegram", "facebook"]
   images:
     - ''
 
@@ -56,14 +60,18 @@ languages:
         logoHomeLink: /
 menu:
   main:
+    - identifier: About
+      name: About
+      url: /about
+      weight: 1
+
     - identifier: Posts
       name: Posts
       url: /posts
-      weight: 1
-    
-    - identifier: Github
-      name: Github
-      url: https://github.com/defloriooryn
       weight: 2
 
+    - identifier: Archive
+      name: Archive
+      url: /archive
+      weight: 3
 ---
