@@ -30,7 +30,7 @@ params:
   dateformNum: '2006-01-02'
   dateformNumTime: '2006-01-02 15:04'
   defaultTheme: dark
-  homeSubtitle: A simple and beautiful blog
+  homeSubtitle: a simple and beautiful blog
   disableReadOtherPosts: false
   enableSharingButtons: true
   enableGlobalLanguageMenu: true
