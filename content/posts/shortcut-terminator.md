@@ -1,12 +1,9 @@
 ---
-title: "Shortcut Terminator"
+title: "Terminator Shortcut"
 date: 2023-05-10T18:51:08+07:00
 draft: false
 toc: false
-images:
-params:
-  ShowCodeCopyButtons: true
-  author: "Deflorio Arya Nizam"
+tags: ["Linux"]
 ---
 
 - Move to the Above Terminal – **Super+Up_Arrow_Key**

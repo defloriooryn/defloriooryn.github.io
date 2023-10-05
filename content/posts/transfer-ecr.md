@@ -4,12 +4,11 @@ date: 2023-05-12T18:51:08+07:00
 draft: false
 toc: false
 images:
-params:
-  ShowCodeCopyButtons: true
-  author: "Deflorio Arya Nizam"
+tags: ["AWS"]
+
 ---
 
-![Logo ECR](https://github.com/defloriooryn/Assets/blob/main/ecr.png?raw=true#center)
+![Logo ECR](/ecr.png#center)
 
 ### *Prerequisite* : 
 1. Two AWS accounts
@@ -20,13 +19,13 @@ params:
 
 ### First | Create Access & Secret Key
 1. Open AWS Console at https://console.aws.amazon.com/. Then click on your profile name and then click on **Security Credentials**. (you can skip to the next second-step, if you're already have access and secret key).
-![Logo 1](https://github.com/defloriooryn/Assets/blob/main/1.jpeg?raw=true)
+![Logo 1](/1.jpeg#center)
 
 2. Scroll down to **Access Keys** and select **Create New Access Key**.
-![Logo 1](https://github.com/defloriooryn/Assets/blob/main/2.jpeg?raw=true)
+![Logo 1](/2.jpeg#center)
 
 3. Click on Show **Secret Key** and save the Access key and Secret key. 
-![Logo 1](https://github.com/defloriooryn/Assets/blob/main/3.jpeg?raw=true)
+![Logo 1](/3.jpeg#center)
 
 4. Repeat the steps 1-3 for the other account.
 

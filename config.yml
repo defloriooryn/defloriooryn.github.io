@@ -11,11 +11,11 @@ params:
   profileMode:
         enabled: true
         title: "Deflorio Arya Nizam" 
-        subtitle: "Cloud Enthusiast & Runner"
-        imageUrl: "https://github.com/defloriooryn/Assets/blob/main/me.jpeg?raw=true" # optional
-        imageTitle: "<title of image as alt>" # optional
-        imageWidth: 200
-        imageHeight: 200
+        subtitle: "Cloud & DevOps Enthusiast 👽"
+        imageUrl: "my-photo.jpeg" 
+        imageTitle: "My Photo"
+        imageWidth: 225
+        imageHeight: 225
 
   socialIcons: 
       - name: "linkedin"
@@ -34,10 +34,11 @@ params:
   disableReadOtherPosts: false
   enableSharingButtons: true
   enableGlobalLanguageMenu: true
+  enableEmoji: true
   description: My new homepage or blog
   keywords: 'homepage, blog'
   ShowShareButtons: true
-  ShareButtons: ["linkedin", "whatsapp", "telegram", "facebook"]
+  ShareButtons: ["linkedin", "whatsapp", "telegram",]
   images:
     - ''
 
@@ -48,7 +49,7 @@ taxonomies:
 languages:
   en:
     title: DefNotes
-    subtitle: A simple theme for Hugos
+    subtitle: 🌩
     keywords: ''
     copyright: >-
       <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
@@ -73,5 +74,10 @@ menu:
     - identifier: Archive
       name: Archive
       url: /archive
+      weight: 3
+
+    - identifier: Tag
+      name: Tag
+      url: /tags
       weight: 3
 ---
