@@ -101,7 +101,10 @@ Next configure AWS Credential, go to Manage Jenkins > Credentials > System > Glo
 Click New Item > Enter Pipeline Name
 ![3](/3_terraform-jenkins.png)
 
-Enter you pipeline script : 
+
+In Definition choose 'Pipeline script for SCM', and fill the repository URL & credentials box with your own.
+![5](/5-terraform-jenkins.png)
+ 
 ```bash
 #Jenkinsfile
 pipeline {
