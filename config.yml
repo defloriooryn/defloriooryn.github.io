@@ -70,12 +70,7 @@ menu:
       name: Posts
       url: /posts
       weight: 2
-
-    - identifier: Archive
-      name: Archive
-      url: /archive
-      weight: 3
-
+      
     - identifier: Tag
       name: Tag
       url: /tags
