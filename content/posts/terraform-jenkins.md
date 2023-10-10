@@ -19,7 +19,7 @@ tags: ["AWS", "Terraform", "Jenkins"]
 ### *Pre-requisite* :
 - AWS & Github Account
 - Configured AWS Credentials on local 
-- AWS CLI Installed
+- AWS CLI Installed on local
 
 &nbsp;
 
@@ -42,7 +42,7 @@ This is a content of *setup.sh* :
 #Ubuntu/Debian
 
 # Install Jenkins
-sudo apt update && sudo apt install git fontconfig openjdk-17-jre -y
+sudo apt update && sudo apt install git fontconfig unzip openjdk-17-jre -y
 curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update && sudo apt-get install jenkins -y
@@ -53,6 +53,10 @@ wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/sha
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install terraform
 
+# Install AWS CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
 ```
 After instance running and Jenkins successfuly installed, ensure you have open port 8080 on *Security Group* because its Jenkins default port. And now setting up Jenkins with access **your-instance-ip-or-domain:8080** via browser. 
 ![Unlock-Jenkins](/Unlock-jenkins.png)  
@@ -67,10 +71,11 @@ To unlock Jenkins, open terminal and use command below to see the password.
 &nbsp;
 
 ### Second | Generate AWS Credentials
-You can skip this step, if you already have Access & Secret Key
+You can skip this step, if you already have Access & Secret Key.
 ```bash
-> aws iam create-access-key --user-name your-user
+aws iam create-access-key --user-name your-user
 
+output : 
 {
     "AccessKey": {
         "UserName": "your-user",
@@ -81,33 +86,30 @@ You can skip this step, if you already have Access & Secret Key
     }
 }
 ```
-
 &nbsp;
 
-### Third | Install & Configure AWS Credentials Plugin
+### Third | Configure AWS Credentials on Jenkins Server
 
-Go to Manage Jenkins > Plugin > Availabe Plugin > search AWS Credentials, and click Install.
-![1](/1-terraform-jenkins.png)
-
-Next configure AWS Credential, go to Manage Jenkins > Credentials > System > Global credentials > and click Add Credentials.
-![2](/2-terraform-jenkins.png)
-
-And now install Terraform plugin. Go to Manage Jenkins > Plugin > Availabe Plugin > search AWS Credentials, and click Install.
-![tf-plugin](/tf-plugin.png)
-
-Next, configure Terraform plugin. Go to Manage Jenkins > Tools > search Terraform section, then enter name and uncheck automatic install and enter install directory.
-![tf-plugin2](/tf-plugin2.png)
-
+Use command below to configure AWS Credentials.
+```bash
+ssh -i keypair-name jenkins@domain/public-ip-instance '
+aws configure set aws_access_key_id "YOUR-ACCESS-KEY" --profile jenkins && \
+aws configure set aws_secret_access_key "YOUR-SECRET-KEY" --profile jenkins && \
+aws configure set region "us-east-1" --profile jenkins
+'
+```
 &nbsp;
 
 ### Fourth | Setup Jenkins Pipeline
 
-Click New Item > Enter Pipeline Name
+Click New Item > Enter Pipeline Name.
 ![3](/3_terraform-jenkins.png)
 
 
 In Definition choose 'Pipeline script for SCM', then fill the repository URL & credentials box with your own and uncheck Lightweight checkout.
 ![5](/5-terraform-jenkins.png)
+
+And this is a code of Jenkinsfile.
  
 ```bash
 #Jenkinsfile
@@ -117,37 +119,35 @@ pipeline {
 
         stage("Checkout"){
             steps{
-                git 'https://github.com/defloriooryn/jenkins-terraform.git'
+        		echo pwd()
+                git branch: 'main', 
+                  credentialsId: 'auth-jenkins-tf',
+                  url: 'https://github.com/defloriooryn/jenkins-terraform.git'
             }
         }
 
         stage("TF Init"){
             steps{
-                sh terraform init
+                sh 'export AWS_PROFILE=jenkins'
+                sh 'terraform init'
             }
         }
 
         stage("TF Validate"){
             steps{
-                sh terraform validate
+                sh 'terraform validate'
             }
         }
 
         stage("TF Plan"){
             steps{
-                sh terraform plan
+                sh 'terraform plan'
             }
         }
 
         stage("TF Apply"){
             steps{
-                WithCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: "nizamzam",
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 sh 'terraform apply -auto-approve'
-                }
             }
         }
     }
@@ -173,6 +173,7 @@ terraform {
 
 provider "aws" {
   region = var.region
+  profile = "jenkins"
 }
 ```
 
@@ -223,10 +224,6 @@ resource "aws_subnet" "database" {
 
 resource "aws_eip" "eip_natgw" {
   domain = "vpc"
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
 
 resource "aws_nat_gateway" "nat_gw" {
@@ -335,12 +332,12 @@ resource "aws_security_group" "sg-rds" {
   }
 }
 
-# Auto Scalling Group
 resource "aws_launch_template" "launch_template" {
   name          = "template"
   image_id      = var.instance_template.ami
   instance_type = var.instance_template.type
-
+  user_data = base64encode(file("${path.module}/script/nginx.sh"))
+  
   network_interfaces {
     device_index    = 0
     security_groups = [aws_security_group.sg-instance.id]
@@ -360,8 +357,6 @@ resource "aws_autoscaling_group" "asg" {
   }
 }
 
-
-# Application Load Balancer
 resource "aws_lb" "alb" {
   name               = "external-lb"
   internal           = false
@@ -396,13 +391,6 @@ resource "aws_lb_listener" "lb_listener_http" {
     target_group_arn = aws_lb_target_group.tg_instance.id
     type             = "forward"
   }
-}
-
-
-# Database
-resource "aws_db_subnet_group" "sg_db" {
-  name       = "db-subnet"
-  subnet_ids = values(aws_subnet.database)[*].id
 }
 
 resource "aws_db_instance" "db" {
@@ -525,3 +513,14 @@ variable "db" {
   }
 }
 ```
+
+
+### Sixth | Test Pipeline
+After the Jenkins setup is complete and you have pushed the code to your repository. Then in your Job, click **Build Now** to trigger the pipeline.
+![6](/6-terraform-jenkins.png#center)
+
+&nbsp;
+
+### Additional : 
+
+Just like that for notes today, hopefully I can still exist to update this website
