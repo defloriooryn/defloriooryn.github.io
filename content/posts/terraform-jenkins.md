@@ -10,7 +10,7 @@ tags: ["AWS", "Terraform", "Jenkins"]
 ![Diagram](/jenkins-terraform.png#center)
 
 ### Objective
-- Setup Jenkins for automate IaC 
+- Setup Jenkins for automate Terraform process
 - Provision highly available 3-tier architecture with Terraform
 
 &nbsp;
@@ -39,22 +39,20 @@ This is a content of *setup.sh* :
 ```bash
 #!/bin/bash
 
-# Ubuntu/Debian
-
-# Install Git & Java
-sudo apt update && sudo apt install git fontconfig openjdk-17-jre -y
+#Ubuntu/Debian
 
 # Install Jenkins
+sudo apt update && sudo apt install git fontconfig openjdk-17-jre -y
 curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update && sudo apt-get install jenkins -y
 sudo systemctl enable jenkins
 
 # Install Terraform
-sudo apt install curl gnupg software-properties-common -y
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" sudo tee /etc/apt/sources.list.d/hashicorp.list 
-sudo apt update && sudo apt install terraform -y
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+
 ```
 After instance running and Jenkins successfuly installed, ensure you have open port 8080 on *Security Group* because its Jenkins default port. And now setting up Jenkins with access **your-instance-ip-or-domain:8080** via browser. 
 ![Unlock-Jenkins](/Unlock-jenkins.png)  
@@ -94,6 +92,12 @@ Go to Manage Jenkins > Plugin > Availabe Plugin > search AWS Credentials, and cl
 Next configure AWS Credential, go to Manage Jenkins > Credentials > System > Global credentials > and click Add Credentials.
 ![2](/2-terraform-jenkins.png)
 
+And now install Terraform plugin. Go to Manage Jenkins > Plugin > Availabe Plugin > search AWS Credentials, and click Install.
+![tf-plugin](/tf-plugin.png)
+
+Next, configure Terraform plugin. Go to Manage Jenkins > Tools > search Terraform section, then enter name and uncheck automatic install and enter install directory.
+![tf-plugin2](/tf-plugin2.png)
+
 &nbsp;
 
 ### Fourth | Setup Jenkins Pipeline
@@ -102,7 +106,7 @@ Click New Item > Enter Pipeline Name
 ![3](/3_terraform-jenkins.png)
 
 
-In Definition choose 'Pipeline script for SCM', and fill the repository URL & credentials box with your own.
+In Definition choose 'Pipeline script for SCM', then fill the repository URL & credentials box with your own and uncheck Lightweight checkout.
 ![5](/5-terraform-jenkins.png)
  
 ```bash
